@@ -1,0 +1,92 @@
+# Docker Compose file for the node-bazaar microservice
+
+services:
+  # Authentication service
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+
+  # Category service
+  category:
+    build:
+      context: .
+      dockerfile: ./apps/category/Dockerfile
+      target: development
+    command: npm run start:dev category
+    env_file:
+      - ./apps/category/.env
+    ports:
+      - 3002:3002
+    volumes:
+      - .:/usr/src/app
+
+  # Product service
+  product:
+    build:
+      context: .
+      dockerfile: ./apps/product/Dockerfile
+      target: development
+    command: npm run start:dev product
+    env_file:
+      - ./apps/product/.env
+    ports:
+      - 3003:3003
+    volumes:
+      - .:/usr/src/app
+
+  # Cart service
+  cart:
+    build:
+      context: .
+      dockerfile: ./apps/cart/Dockerfile
+      target: development
+    command: npm run start:dev cart
+    env_file:
+      - ./apps/cart/.env
+    ports:
+      - 3004:3004
+    volumes:
+      - .:/usr/src/app
+
+  # Payments service
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: npm run start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    ports:
+      - 3005:3005
+    volumes:
+      - .:/usr/src/app
+
+  # Orders service
+  orders:
+    build:
+      context: .
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: npm run start:dev orders
+    env_file:
+      - ./apps/orders/.env
+    ports:
+      - 3006:3006
+    volumes:
+      - .:/usr/src/app
+
+  # MongoDB service
+  mongo:
+    image: mongo
+    ports:
+      - 28017:27017
