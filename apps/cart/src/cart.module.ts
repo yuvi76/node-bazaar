@@ -1,7 +1,7 @@
-import { Module } from "@nestjs/common";
-import * as Joi from "joi";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { ClientsModule, Transport } from "@nestjs/microservices";
+import { Module } from '@nestjs/common';
+import * as Joi from 'joi';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   DatabaseModule,
   AUTH_SERVICE,
@@ -11,10 +11,10 @@ import {
   ProductDocument,
   ProductSchema,
   PAYMENTS_SERVICE,
-} from "@app/common";
-import { CartController } from "./cart.controller";
-import { CartService } from "./cart.service";
-import { CartRepository } from "./cart.repository";
+} from '@app/common';
+import { CartController } from './cart.controller';
+import { CartService } from './cart.service';
+import { CartRepository } from './cart.repository';
 
 /**
  * Represents the Cart module.
@@ -44,8 +44,8 @@ import { CartRepository } from "./cart.repository";
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get("AUTH_HOST"),
-            port: configService.get("AUTH_PORT"),
+            host: configService.get('AUTH_HOST'),
+            port: configService.get('AUTH_PORT'),
           },
         }),
         inject: [ConfigService],
@@ -55,8 +55,8 @@ import { CartRepository } from "./cart.repository";
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get("PAYMENTS_HOST"),
-            port: configService.get("PAYMENTS_PORT"),
+            host: configService.get('PAYMENTS_HOST'),
+            port: configService.get('PAYMENTS_PORT'),
           },
         }),
         inject: [ConfigService],

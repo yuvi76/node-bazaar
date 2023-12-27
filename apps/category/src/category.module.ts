@@ -1,17 +1,17 @@
-import { Module } from "@nestjs/common";
-import * as Joi from "joi";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { Module } from '@nestjs/common';
+import * as Joi from 'joi';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
   DatabaseModule,
   AUTH_SERVICE,
   ErrorHandlerService,
   CategoryDocument,
   CategorySchema,
-} from "@app/common";
-import { CategoryController } from "./category.controller";
-import { CategoryService } from "./category.service";
-import { CategoryRepository } from "./category.repository";
-import { ClientsModule, Transport } from "@nestjs/microservices";
+} from '@app/common';
+import { CategoryController } from './category.controller';
+import { CategoryService } from './category.service';
+import { CategoryRepository } from './category.repository';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 /**
  * Represents the Category module.
@@ -38,8 +38,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get("AUTH_HOST"),
-            port: configService.get("AUTH_PORT"),
+            host: configService.get('AUTH_HOST'),
+            port: configService.get('AUTH_PORT'),
           },
         }),
         inject: [ConfigService],

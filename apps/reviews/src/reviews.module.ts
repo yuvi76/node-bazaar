@@ -1,39 +1,38 @@
 import { Module } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   DatabaseModule,
   AUTH_SERVICE,
   ErrorHandlerService,
-  OrdersDocument,
-  OrdersSchema,
-  PAYMENTS_SERVICE,
-  CartDocument,
-  CartSchema,
+  PRODUCT_SERVICE,
+  ReviewsDocument,
+  ReviewsSchema,
 } from '@app/common';
-import { OrdersController } from './orders.controller';
-import { OrdersService } from './orders.service';
-import { OrdersRepository } from './orders.repository';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ReviewsController } from './reviews.controller';
+import { ReviewsService } from './reviews.service';
+import { ReviewsRepository } from './reviews.repository';
 
 /**
- * Represents the Orders module.
- * This module is responsible for managing orders in the node-bazaar microservice.
+ * Module for managing reviews in the node-bazaar microservice.
  */
 @Module({
   imports: [
     DatabaseModule,
     DatabaseModule.forFeature([
-      { name: OrdersDocument.name, schema: OrdersSchema },
-      { name: CartDocument.name, schema: CartSchema },
+      { name: ReviewsDocument.name, schema: ReviewsSchema },
     ]),
     ConfigModule.forRoot({
+      envFilePath: 'apps/reviews/.env',
       isGlobal: true,
       validationSchema: Joi.object({
         HTTP_PORT: Joi.number().required(),
         MONGODB_URI: Joi.string().required(),
         AUTH_HOST: Joi.string().required(),
         AUTH_PORT: Joi.number().required(),
+        PRODUCT_HOST: Joi.string().required(),
+        PRODUCT_PORT: Joi.number().required(),
       }),
     }),
     ClientsModule.registerAsync([
@@ -49,20 +48,20 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService],
       },
       {
-        name: PAYMENTS_SERVICE,
+        name: PRODUCT_SERVICE,
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get('PAYMENTS_HOST'),
-            port: configService.get('PAYMENTS_PORT'),
+            host: configService.get('PRODUCT_HOST'),
+            port: configService.get('PRODUCT_PORT'),
           },
         }),
         inject: [ConfigService],
       },
     ]),
   ],
-  controllers: [OrdersController],
-  providers: [OrdersService, OrdersRepository, ErrorHandlerService],
-  exports: [OrdersService],
+  controllers: [ReviewsController],
+  providers: [ReviewsService, ReviewsRepository, ErrorHandlerService],
+  exports: [ReviewsService, ReviewsRepository],
 })
-export class OrdersModule {}
+export class ReviewsModule {}

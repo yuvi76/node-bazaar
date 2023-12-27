@@ -12,6 +12,7 @@ services:
       - ./apps/auth/.env
     ports:
       - 3000:3000
+      # - 3001:3001
     volumes:
       - .:/usr/src/app
 
@@ -40,6 +41,7 @@ services:
       - ./apps/product/.env
     ports:
       - 3003:3003
+      # - 3004:3004
     volumes:
       - .:/usr/src/app
 
@@ -53,7 +55,7 @@ services:
     env_file:
       - ./apps/cart/.env
     ports:
-      - 3004:3004
+      - 3005:3005
     volumes:
       - .:/usr/src/app
 
@@ -67,7 +69,7 @@ services:
     env_file:
       - ./apps/payments/.env
     ports:
-      - 3005:3005
+      - 3006:3006
     volumes:
       - .:/usr/src/app
 
@@ -81,7 +83,21 @@ services:
     env_file:
       - ./apps/orders/.env
     ports:
-      - 3006:3006
+      - 3007:3007
+    volumes:
+      - .:/usr/src/app
+
+  # Reviews service
+  reviews:
+    build:
+      context: .
+      dockerfile: ./apps/reviews/Dockerfile
+      target: development
+    command: npm run start:dev reviews
+    env_file:
+      - ./apps/reviews/.env
+    ports:
+      - 3008:3008
     volumes:
       - .:/usr/src/app
 

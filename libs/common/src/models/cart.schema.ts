@@ -1,6 +1,6 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { AbstractDocument } from "@app/common";
-import * as mongoose from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { AbstractDocument } from '@app/common';
+import * as mongoose from 'mongoose';
 
 /**
  * Represents a product in the cart.
@@ -9,7 +9,7 @@ class Product {
   /**
    * The product ID associated with the cart.
    */
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "products" })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'products' })
   product: mongoose.ObjectId;
 
   /**
@@ -34,12 +34,12 @@ class Product {
 /**
  * Represents a document for a cart in the nodebazaar system.
  */
-@Schema({ versionKey: false, timestamps: true, collection: "carts" })
+@Schema({ versionKey: false, timestamps: true, collection: 'carts' })
 export class CartDocument extends AbstractDocument {
   /**
    * The user associated with the cart.
    */
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "users" })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'users' })
   user: string;
 
   /**

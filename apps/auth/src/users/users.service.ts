@@ -44,12 +44,10 @@ export class UsersService {
    * @throws UnauthorizedException if the user already exists.
    */
   private async validateUserCreateUserDto(createUserDto: CreateUsersDto) {
-    try {
-      await this.usersRepository.findOne({ email: createUserDto.email });
-    } catch (error) {
-      return;
-    }
-    throw new UnauthorizedException('User already exists');
+    const user = await this.usersRepository.findOne({
+      email: createUserDto.email,
+    });
+    if (user) throw new UnauthorizedException('User already exists');
   }
 
   /**

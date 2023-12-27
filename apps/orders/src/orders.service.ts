@@ -60,11 +60,12 @@ export class OrdersService {
             await this.cartDocument.deleteMany({ user: user._id });
 
             return this.ordersRepository.create({
-              user: user._id,
+              user: user._id.toString(),
               products: cart.products,
               totalPrice: cart.totalCartPrice,
               checkoutSessionId: res.id,
               checkoutUrl: res.url,
+              status: ORDER_STATUS.PENDING,
             });
           }),
         );

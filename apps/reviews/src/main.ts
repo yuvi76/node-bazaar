@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { ProductModule } from './product.module';
+import { ReviewsModule } from './reviews.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Transport } from '@nestjs/microservices';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 /**
@@ -10,25 +9,17 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
  * setting up global pipes, and listening on the specified HTTP port.
  */
 async function bootstrap() {
-  const app = await NestFactory.create(ProductModule);
+  const app = await NestFactory.create(ReviewsModule);
   const config = new DocumentBuilder()
-    .setTitle('Product API')
-    .setDescription('Product API Description')
+    .setTitle('Reviews API')
+    .setDescription('Reviews API Description')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   const configService = app.get(ConfigService);
-  app.connectMicroservice({
-    transport: Transport.TCP,
-    options: {
-      host: configService.get('TCP_HOST'),
-      port: configService.get('TCP_PORT'),
-    },
-  });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await app.startAllMicroservices();
   await app.listen(configService.get('HTTP_PORT'));
 }
 bootstrap();

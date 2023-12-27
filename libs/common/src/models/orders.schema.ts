@@ -34,7 +34,7 @@ export class OrdersDocument extends AbstractDocument {
    * The user ID of the order.
    */
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'users' })
-  user: mongoose.ObjectId;
+  user: string;
 
   /**
    * The products of the order.

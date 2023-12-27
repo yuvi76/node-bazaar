@@ -4,6 +4,7 @@ import { ProductService } from './product.service';
 import { BaseResponse, JwtAuthGuard, ROLE, Roles } from '@app/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductListDto } from './dto/get-product-list.dto';
+import { EventPattern } from '@nestjs/microservices';
 
 /**
  * Controller for managing products.
@@ -77,5 +78,15 @@ export class ProductController {
       categoryId,
       getProductListDto,
     );
+  }
+
+  /**
+   * Updates the rating of a product.
+   * @param productId The ID of the product to update.
+   * @returns A promise that resolves to the updated product.
+   */
+  @EventPattern('update_product_rating')
+  async updateProductRating(productId: string): Promise<boolean> {
+    return await this.productService.updateProductRating(productId);
   }
 }

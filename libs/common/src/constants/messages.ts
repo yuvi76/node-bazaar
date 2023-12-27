@@ -31,4 +31,11 @@ export const MESSAGE = {
   ORDER_NOT_FOUND: 'Order not found.',
   ORDERS_FETCHED_SUCCESS: 'Orders fetched successfully.',
   ORDER_UPDATED_SUCCESS: 'Order updated successfully.',
+
+  // Review
+  REVIEW_CREATED: 'Review created successfully.',
+  REVIEW_RETRIEVED: 'Review retrieved successfully.',
+  REVIEW_NOT_FOUND: 'Review not found.',
+  REVIEW_UPDATED: 'Review updated successfully.',
+  REVIEW_DELETED: 'Review deleted successfully.',
 };

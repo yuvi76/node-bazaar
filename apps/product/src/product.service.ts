@@ -1,5 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { BaseResponse, ProductDocument } from '@app/common';
+import { BaseResponse, ProductDocument, ReviewsDocument } from '@app/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { MESSAGE, ErrorHandlerService } from '@app/common';
@@ -20,7 +20,9 @@ export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
     @InjectModel(ProductDocument.name)
-    readonly productModel: Model<ProductDocument>,
+    private readonly productModel: Model<ProductDocument>,
+    @InjectModel(ReviewsDocument.name)
+    private readonly reviewsModel: Model<ReviewsDocument>,
     private readonly errorHandlerService: ErrorHandlerService,
   ) {}
 
@@ -324,6 +326,48 @@ export class ProductService {
           totalCount: totalCount[0].count,
         },
       };
+    } catch (error) {
+      // Handle the error here
+      await this.errorHandlerService.HttpException(error);
+    }
+  }
+
+  /**
+   * Updates the rating of a product.
+   * @param productId The ID of the product to update.
+   * @returns A promise that resolves to the updated product.
+   */
+  async updateProductRating(productId: string): Promise<boolean> {
+    try {
+      const [reviews] = await this.reviewsModel.aggregate([
+        {
+          $match: { product: new mongoose.Types.ObjectId(productId) },
+        },
+        {
+          $group: {
+            _id: '$product',
+            rating: { $avg: '$rating' },
+            numberOfReviews: { $sum: 1 },
+          },
+        },
+        {
+          $addFields: {
+            rating: { $round: ['$rating', 1] },
+          },
+        },
+      ]);
+      await this.productModel.findOneAndUpdate(
+        { _id: new mongoose.Types.ObjectId(productId) },
+        [
+          {
+            $set: {
+              rating: reviews.rating,
+              numberOfReviews: reviews.numberOfReviews,
+            },
+          },
+        ],
+      );
+      return true;
     } catch (error) {
       // Handle the error here
       await this.errorHandlerService.HttpException(error);

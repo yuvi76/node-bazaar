@@ -24,12 +24,10 @@ export class CategoryService {
    * @throws ConflictException if the category already exists.
    */
   private async checkCategoryExists(createCategoryDto: CreateCategoryDto) {
-    try {
-      await this.categoryRepository.findOne({ name: createCategoryDto.name });
-    } catch (error) {
-      return;
-    }
-    throw new ConflictException('Category already exists');
+    const category = await this.categoryRepository.findOne({
+      name: createCategoryDto.name,
+    });
+    if (category) throw new ConflictException('Category already exists');
   }
 
   /**
