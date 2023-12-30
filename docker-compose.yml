@@ -101,6 +101,20 @@ services:
     volumes:
       - .:/usr/src/app
 
+  # User service
+  user:
+    build:
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+      target: development
+    command: npm run start:dev user
+    env_file:
+      - ./apps/user/.env
+    ports:
+      - 3009:3009
+    volumes:
+      - .:/usr/src/app
+
   # MongoDB service
   mongo:
     image: mongo

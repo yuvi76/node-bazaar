@@ -4,6 +4,7 @@ export const MESSAGE = {
   LOGIN_SUCCESS: 'Login successfully.',
   USER_CREATED_SUCCESS: 'User created successfully.',
   USER_RETRIEVED_SUCCESS: 'User retrieved successfully.',
+  USER_UPDATED_SUCCESS: 'User updated successfully.',
 
   // Category
   CATEGORY_CREATED: 'Category created successfully.',

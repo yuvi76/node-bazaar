@@ -65,6 +65,12 @@ export class OrdersDocument extends AbstractDocument {
    */
   @Prop({ type: String })
   checkoutUrl: string;
+
+  /**
+   * The Delivery Address of the order.
+   */
+  @Prop({ type: Object })
+  deliveryAddress: object;
 }
 
 export const OrdersSchema = SchemaFactory.createForClass(OrdersDocument);

@@ -58,7 +58,7 @@ export class OrdersService {
         .pipe(
           map(async (res) => {
             await this.cartDocument.deleteMany({ user: user._id });
-
+            const [address] = user.address.filter((address) => address.isDefault);
             return this.ordersRepository.create({
               user: user._id.toString(),
               products: cart.products,
@@ -66,6 +66,7 @@ export class OrdersService {
               checkoutSessionId: res.id,
               checkoutUrl: res.url,
               status: ORDER_STATUS.PENDING,
+              deliveryAddress: address,
             });
           }),
         );
@@ -284,6 +285,7 @@ export class OrdersService {
   /**
    * Update an order.
    * @param orderId The id of the order to update.
+   * @returns A promise that resolves to a BaseResponse object.
    */
   async updateOrder(orderId: string): Promise<BaseResponse> {
     try {

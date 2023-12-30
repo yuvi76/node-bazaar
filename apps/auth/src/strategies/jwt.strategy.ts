@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from '../users/users.service';
+import { AuthService } from '../auth.service';
 import { TokenInterface } from '../interface/token-payload-interface';
 
 /**
@@ -13,11 +13,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   /**
    * JwtStrategy constructor.
    * @param configService - The configuration service.
-   * @param usersService - The users service.
+   * @param authService - The authentication service.
    */
   constructor(
     configService: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -36,6 +36,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @returns The user associated with the token.
    */
   async validate({ userId }: TokenInterface) {
-    return this.usersService.getUser({ _id: userId });
+    return this.authService.getUser(userId);
   }
 }

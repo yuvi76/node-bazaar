@@ -4,10 +4,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from './users/users.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { ErrorHandlerService } from '@app/common';
+import {
+  DatabaseModule,
+  ErrorHandlerService,
+  UserDocument,
+  UserSchema,
+} from '@app/common';
+import { UsersRepository } from './users.repository';
 
 /**
  * Represents the AuthModule class.
@@ -15,7 +20,10 @@ import { ErrorHandlerService } from '@app/common';
  */
 @Module({
   imports: [
-    UsersModule,
+    DatabaseModule,
+    DatabaseModule.forFeature([
+      { name: UserDocument.name, schema: UserSchema },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -37,6 +45,12 @@ import { ErrorHandlerService } from '@app/common';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, ErrorHandlerService],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    ErrorHandlerService,
+    UsersRepository,
+  ],
 })
 export class AuthModule {}
