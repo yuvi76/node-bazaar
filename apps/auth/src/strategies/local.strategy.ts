@@ -23,7 +23,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     try {
       return await this.authService.verifyUser(username, password);
     } catch (error) {
-      throw new UnauthorizedException(error);
+      throw error;
     }
   }
 }

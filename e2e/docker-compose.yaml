@@ -1,0 +1,98 @@
+services:
+  # Authentication service
+  auth:
+    image: node-bazaar-auth
+    command: npm run start:dev auth
+    env_file:
+      - ../apps/auth/.env
+    ports:
+      - 3000:3000
+      # - 3001:3001
+
+  # Category service
+  category:
+    image: node-bazaar-category
+    command: npm run start:dev category
+    env_file:
+      - ../apps/category/.env
+    ports:
+      - 3002:3002
+
+  # Product service
+  product:
+    image: node-bazaar-product
+    command: npm run start:dev product
+    env_file:
+      - ../apps/product/.env
+    ports:
+      - 3003:3003
+      # - 3004:3004
+
+  # Cart service
+  cart:
+    image: node-bazaar-cart
+    command: npm run start:dev cart
+    env_file:
+      - ../apps/cart/.env
+    ports:
+      - 3005:3005
+
+  # Payments service
+  payments:
+    image: node-bazaar-payments
+    command: npm run start:dev payments
+    env_file:
+      - ../apps/payments/.env
+    ports:
+      - 3006:3006
+
+  # Orders service
+  orders:
+    image: node-bazaar-orders
+    command: npm run start:dev orders
+    env_file:
+      - ../apps/orders/.env
+    ports:
+      - 3007:3007
+
+  # Reviews service
+  reviews:
+    image: node-bazaar-reviews
+    command: npm run start:dev reviews
+    env_file:
+      - ../apps/reviews/.env
+    ports:
+      - 3008:3008
+
+  # User service
+  user:
+    image: node-bazaar-user
+    command: npm run start:dev user
+    env_file:
+      - ../apps/user/.env
+    ports:
+      - 3009:3009
+
+  # MongoDB service
+  mongo:
+    image: mongo
+    ports:
+      - 28017:27017
+
+  e2e:
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./specs:/usr/src/app/specs
+    depends_on:
+      - auth
+      - mongo
+      - category
+      - product
+      - cart
+      - payments
+      - orders
+      - reviews
+      - user
+    command: >
+      sh -c "sleep 70 && npm test"

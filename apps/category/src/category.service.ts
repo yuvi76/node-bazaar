@@ -1,4 +1,9 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryRepository } from './category.repository';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -27,7 +32,7 @@ export class CategoryService {
     const category = await this.categoryRepository.findOne({
       name: createCategoryDto.name,
     });
-    if (category) throw new ConflictException('Category already exists');
+    if (category) throw new ConflictException(MESSAGE.CATEGORY_ALREADY_EXIST);
   }
 
   /**
@@ -81,6 +86,10 @@ export class CategoryService {
         _id: categoryId,
       });
 
+      if (!category) {
+        throw new NotFoundException(MESSAGE.CATEGORY_NOT_FOUND);
+      }
+
       return {
         statusCode: HttpStatus.OK,
         message: MESSAGE.CATEGORY_RETRIEVED,
@@ -108,6 +117,10 @@ export class CategoryService {
         updateCategoryDto,
       );
 
+      if (!category) {
+        throw new NotFoundException(MESSAGE.CATEGORY_NOT_FOUND);
+      }
+
       return {
         statusCode: HttpStatus.OK,
         message: MESSAGE.CATEGORY_UPDATED,
@@ -126,7 +139,13 @@ export class CategoryService {
    */
   async deleteCategory(categoryId: string): Promise<BaseResponse> {
     try {
-      await this.categoryRepository.findOneAndDelete({ _id: categoryId });
+      const category = await this.categoryRepository.findOneAndDelete({
+        _id: categoryId,
+      });
+
+      if (!category) {
+        throw new NotFoundException(MESSAGE.CATEGORY_NOT_FOUND);
+      }
 
       return {
         statusCode: HttpStatus.OK,

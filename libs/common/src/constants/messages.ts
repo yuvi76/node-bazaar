@@ -5,6 +5,7 @@ export const MESSAGE = {
   USER_CREATED_SUCCESS: 'User created successfully.',
   USER_RETRIEVED_SUCCESS: 'User retrieved successfully.',
   USER_UPDATED_SUCCESS: 'User updated successfully.',
+  INVALID_CREDENTIALS: 'Invalid credentials.',
 
   // Category
   CATEGORY_CREATED: 'Category created successfully.',
@@ -12,6 +13,8 @@ export const MESSAGE = {
   CATEGORY_RETRIEVED: 'Category retrieved successfully.',
   CATEGORY_UPDATED: 'Category updated successfully.',
   CATEGORY_DELETED: 'Category deleted successfully.',
+  CATEGORY_ALREADY_EXIST: 'Category with the same name already exists.',
+  CATEGORY_NOT_FOUND: 'Category not found.',
 
   // Product
   PRODUCT_CREATED: 'Product created successfully.',
