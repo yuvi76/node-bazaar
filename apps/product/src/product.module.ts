@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import * as Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
@@ -50,6 +51,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService],
       },
     ]),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 30000,
+      max: 100,
+    }),
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductRepository, ErrorHandlerService],

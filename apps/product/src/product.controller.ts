@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { BaseResponse, JwtAuthGuard, ROLE, Roles } from '@app/common';
@@ -35,6 +36,7 @@ export class ProductController {
    * @returns A Promise that resolves to a BaseResponse containing the list of products.
    */
   @Post('getAllProducts')
+  @CacheKey('getAllProducts')
   async getProducts(
     @Body() getProductListDto: GetProductListDto,
   ): Promise<BaseResponse> {
@@ -46,6 +48,7 @@ export class ProductController {
    * @returns All products featured on the home page.
    */
   @Get('/Featured')
+  @CacheKey('getFeaturedProducts')
   async getFeaturedProducts(): Promise<BaseResponse> {
     return await this.productService.getFeaturedProducts();
   }
@@ -56,6 +59,7 @@ export class ProductController {
    * @returns The product with the specified ID.
    */
   @Get('/:productId')
+  @CacheKey('getProduct')
   async getProduct(
     @Param('productId') productId: string,
   ): Promise<BaseResponse> {
@@ -70,6 +74,7 @@ export class ProductController {
    * @returns A promise that resolves to a BaseResponse object.
    */
   @Post('category/:categoryId')
+  @CacheKey('getProductsForCategory')
   async getProductsForCategory(
     @Param('categoryId') categoryId: string,
     @Body() getProductListDto: GetProductListDto,

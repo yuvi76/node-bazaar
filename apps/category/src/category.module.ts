@@ -12,6 +12,7 @@ import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 import { CategoryRepository } from './category.repository';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { CacheModule } from '@nestjs/cache-manager';
 
 /**
  * Represents the Category module.
@@ -45,6 +46,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService],
       },
     ]),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 30000,
+      max: 100,
+    }),
   ],
   controllers: [CategoryController],
   providers: [CategoryService, CategoryRepository, ErrorHandlerService],

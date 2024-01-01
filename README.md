@@ -37,3 +37,23 @@ Each service in this project has a Swagger UI for API documentation and testing.
 For example, if the Auth Service is running on `http://localhost:3000`, you can access its Swagger UI at `http://localhost:3000/api`.
 
 The Swagger UI allows you to view the API endpoints for each service, their request parameters, and response formats. You can also send requests to the API endpoints directly from the Swagger UI.
+
+## Technology Used
+
+This project uses a variety of technologies to create a microservice architecture:
+
+- **[NestJS](https://nestjs.com/)**: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
+
+- **[TypeScript](https://www.typescriptlang.org/)**: A typed superset of JavaScript that compiles to plain JavaScript.
+
+- **[Docker](https://www.docker.com/)**: A platform to develop, ship, and run applications inside containers.
+
+- **[MongoDB](https://www.mongodb.com/)**: A source-available cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with optional schemas.
+
+- **[Redis](https://redis.io/)**: An open-source, in-memory data structure store, used as a database, cache, and message broker.
+
+- **[Jest](https://jestjs.io/)**: A delightful JavaScript Testing Framework with a focus on simplicity.
+
+- **[Swagger](https://swagger.io/)**: An open-source software framework backed by a large ecosystem of tools that helps developers design, build, document, and consume RESTful web services.
+
+- **[Stripe](https://stripe.com/)**: An online payment processing platform that allows businesses to send and receive payments over the internet.

@@ -12,6 +12,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { JwtAuthGuard, Roles, ROLE, BaseResponse } from '@app/common';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { CacheKey } from '@nestjs/cache-manager';
 
 /**
  * Controller for managing categories.
@@ -41,6 +42,7 @@ export class CategoryController {
    * @returns All categories.
    */
   @Get()
+  @CacheKey('getAllCategories')
   async getCategories(): Promise<BaseResponse> {
     return await this.categoryService.getAllCategories();
   }
