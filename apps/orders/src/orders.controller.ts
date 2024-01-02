@@ -1,6 +1,14 @@
-import { Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import {
   CurrentUser,
   JwtAuthGuard,
@@ -71,11 +79,25 @@ export class OrdersController {
   /**
    * Update an order.
    * @param orderId The id of the order to update.
+   * @param orderStatus The new status of the order.
    */
   @UseGuards(JwtAuthGuard)
   @Roles(ROLE.ADMIN)
   @Put('/updateOrder/:orderId')
-  async updateOrder(@Param('orderId') orderId: string) {
-    return await this.ordersService.updateOrder(orderId);
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        orderStatus: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  async updateOrder(
+    @Param('orderId') orderId: string,
+    @Body('orderStatus') orderStatus: string,
+  ) {
+    return await this.ordersService.updateOrder(orderId, orderStatus);
   }
 }

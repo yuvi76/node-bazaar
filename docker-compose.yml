@@ -115,8 +115,17 @@ services:
     volumes:
       - .:/usr/src/app
 
-  # MongoDB service
-  mongo:
-    image: mongo
+  # Notifications service
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./apps/notifications/.env
     ports:
-      - 28017:27017
+      - 3010:3010
+      # - 3011:3011
+    volumes:
+      - .:/usr/src/app

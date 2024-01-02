@@ -10,6 +10,7 @@ import {
   PAYMENTS_SERVICE,
   CartDocument,
   CartSchema,
+  NOTIFICATIONS_SERVICE,
 } from '@app/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
@@ -36,6 +37,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         AUTH_PORT: Joi.number().required(),
         PAYMENTS_HOST: Joi.string().required(),
         PAYMENTS_PORT: Joi.number().required(),
+        NOTIFICATIONS_HOST: Joi.string().required(),
+        NOTIFICATIONS_PORT: Joi.number().required(),
       }),
     }),
     ClientsModule.registerAsync([
@@ -61,6 +64,17 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         }),
         inject: [ConfigService],
       },
+      {
+        name: NOTIFICATIONS_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('NOTIFICATIONS_HOST'),
+            port: configService.get('NOTIFICATIONS_PORT'),
+          },
+        }),
+        inject: [ConfigService],
+      }
     ]),
   ],
   controllers: [OrdersController],

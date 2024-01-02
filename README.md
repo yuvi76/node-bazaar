@@ -11,6 +11,8 @@ The project is divided into several microservices, each responsible for a single
 3. **Cart Service**: Manages the shopping cart where users can add, update, or remove products.
 4. **Order Service**: Handles order creation, payment processing, and order status updates.
 5. **Payment Service**: Manages payment processing, typically integrating with a third-party payment gateway.
+6. **Review Rating Service**: Manages customer reviews and ratings for products. This service allows users to post reviews and rate products, and also aggregates these reviews and ratings to provide overall scores for products.
+7. **Notification Service**: Handles all notifications sent to users. This could include order status updates, payment confirmations, promotional messages, and more. This service typically integrates with email, or in app notification services to deliver notifications.
 
 ## Running the Services
 
@@ -38,7 +40,7 @@ For example, if the Auth Service is running on `http://localhost:3000`, you can 
 
 The Swagger UI allows you to view the API endpoints for each service, their request parameters, and response formats. You can also send requests to the API endpoints directly from the Swagger UI.
 
-## Technology Used
+## Tools & Technology Used
 
 This project uses a variety of technologies to create a microservice architecture:
 
@@ -57,3 +59,5 @@ This project uses a variety of technologies to create a microservice architectur
 - **[Swagger](https://swagger.io/)**: An open-source software framework backed by a large ecosystem of tools that helps developers design, build, document, and consume RESTful web services.
 
 - **[Stripe](https://stripe.com/)**: An online payment processing platform that allows businesses to send and receive payments over the internet.
+
+- **[SendGrid](https://sendgrid.com/)**: A cloud-based SMTP provider that allows you to send email without having to maintain email servers. SendGrid manages all of the technical details, from scaling the infrastructure to ISP outreach and reputation monitoring to whitelist services and real time analytics.

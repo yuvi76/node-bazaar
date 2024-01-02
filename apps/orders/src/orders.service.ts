@@ -13,6 +13,7 @@ import {
   PAYMENTS_SERVICE,
   UserDocument,
   ORDER_STATUS,
+  NOTIFICATIONS_SERVICE,
 } from '@app/common';
 import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -40,6 +41,8 @@ export class OrdersService {
     @InjectModel(CartDocument.name)
     readonly cartDocument: mongoose.Model<CartDocument>,
     @Inject(PAYMENTS_SERVICE) private readonly paymentsService: ClientProxy,
+    @Inject(NOTIFICATIONS_SERVICE)
+    private readonly notificationsService: ClientProxy,
   ) {}
 
   /**
@@ -58,7 +61,15 @@ export class OrdersService {
         .pipe(
           map(async (res) => {
             await this.cartDocument.deleteMany({ user: user._id });
-            const [address] = user.address.filter((address) => address.isDefault);
+            const [address] = user.address.filter(
+              (address) => address.isDefault,
+            );
+            this.notificationsService.emit('notify_user', {
+              user: user._id,
+              userEmail: user.email,
+              type: 'Order Placed',
+              message: `Your order has been placed successfully.`,
+            });
             return this.ordersRepository.create({
               user: user._id.toString(),
               products: cart.products,
@@ -285,16 +296,49 @@ export class OrdersService {
   /**
    * Update an order.
    * @param orderId The id of the order to update.
+   * @param orderStatus The status of the order to update.
    * @returns A promise that resolves to a BaseResponse object.
    */
-  async updateOrder(orderId: string): Promise<BaseResponse> {
+  async updateOrder(
+    orderId: string,
+    orderStatus: string,
+  ): Promise<BaseResponse> {
     try {
-      const order = await this.ordersDocument.findById(orderId);
+      const [order] = await this.ordersDocument.aggregate([
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(orderId),
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        { $unwind: '$user' },
+      ]);
       if (!order) {
         throw new NotFoundException(MESSAGE.ORDER_NOT_FOUND);
       }
-      order.status = ORDER_STATUS.COMPLETED;
-      await order.save();
+      await this.ordersDocument.findOneAndUpdate(
+        { _id: new mongoose.Types.ObjectId(orderId) },
+        {
+          $set: {
+            status: orderStatus,
+          },
+        },
+      );
+
+      this.notificationsService.emit('notify_user', {
+        user: order.user._id,
+        userEmail: order.user.email,
+        type: 'Order Status Update',
+        message: `Your order with id ${orderId} has been ${orderStatus}`,
+      });
+
       return {
         statusCode: HttpStatus.OK,
         message: MESSAGE.ORDER_UPDATED_SUCCESS,

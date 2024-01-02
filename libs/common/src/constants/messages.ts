@@ -42,4 +42,8 @@ export const MESSAGE = {
   REVIEW_NOT_FOUND: 'Review not found.',
   REVIEW_UPDATED: 'Review updated successfully.',
   REVIEW_DELETED: 'Review deleted successfully.',
+
+  // Notification
+  NOTIFICATIONS_FETCHED_SUCCESS: 'Notifications fetched successfully.',
+  NOTIFICATIONS_MARKED_AS_READ: 'Notifications marked as read successfully.',
 };

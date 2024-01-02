@@ -10,3 +10,7 @@ export const PAYMENTS_SERVICE = 'payments';
  * The constant representing the products service.
  */
 export const PRODUCT_SERVICE = 'product';
+/**
+ * The constant representing the notifications service.
+ */
+export const NOTIFICATIONS_SERVICE = 'notifications';
