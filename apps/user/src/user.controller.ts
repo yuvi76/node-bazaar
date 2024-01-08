@@ -61,5 +61,23 @@ export class UserController {
   ): Promise<BaseResponse> {
     return await this.userService.updateUser(user, updateUserDto);
   }
+
+  /**
+   * Update One Address
+   * @param user - The current user.
+   * @param updateUserAddressDto - The data for updating the current user.
+   * @returns A promise that resolves to a BaseResponse object.
+   */
+  @UseGuards(JwtAuthGuard)
+  @Post('update-one-address')
+  async updateOneAddress(
+    @CurrentUser() user: UserDocument,
+    @Body() updateUserAddressDto: UpdateUserAddressDto,
+  ): Promise<BaseResponse> {
+    return await this.userService.updateOneAddress(
+      user,
+      updateUserAddressDto,
+    );
+  }
 }
   

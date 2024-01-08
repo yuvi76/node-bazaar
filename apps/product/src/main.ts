@@ -29,6 +29,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.startAllMicroservices();
+  app.enableCors();
   await app.listen(configService.get('HTTP_PORT'));
 }
 bootstrap();

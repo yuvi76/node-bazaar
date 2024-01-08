@@ -20,6 +20,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.enableCors();
   await app.listen(configService.get('HTTP_PORT'));
 }
 bootstrap();

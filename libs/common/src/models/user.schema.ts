@@ -1,10 +1,16 @@
 import { AbstractDocument } from '@app/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 
 /**
  * Represents an address in the database.
  */
 class Address {
+  /**
+   * The _id of the address.
+   */
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
   /**
    * The street of the address.
    */

@@ -199,7 +199,7 @@ export class ProductService {
    */
   async getProduct(productId: string): Promise<BaseResponse> {
     try {
-      const product = await this.productModel.aggregate([
+      const [product] = await this.productModel.aggregate([
         {
           $match: {
             _id: new mongoose.Types.ObjectId(productId),

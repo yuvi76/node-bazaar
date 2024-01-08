@@ -135,7 +135,7 @@ export class CartService {
    */
   async getCart(user: UserDocument): Promise<BaseResponse> {
     try {
-      const cart = await this.cartDocument.aggregate([
+      const [cart] = await this.cartDocument.aggregate([
         {
           $match: { user: new mongoose.Types.ObjectId(user._id) },
         },
@@ -148,6 +148,12 @@ export class CartService {
             localField: 'products.product',
             foreignField: '_id',
             as: 'products.product',
+          },
+        },
+        {
+          $unwind: {
+            path: '$products.product',
+            preserveNullAndEmptyArrays: true,
           },
         },
         {
@@ -165,10 +171,14 @@ export class CartService {
           $project: {
             _id: 1,
             user: 1,
+            'products.product._id': 1,
             'products.product.name': 1,
             'products.product.price': 1,
             'products.product.description': 1,
             'products.product.image': 1,
+            'products.quantity': 1,
+            'products.price': 1,
+            'products.totalPrice': 1,
             status: 1,
             totalCartPrice: 1,
             totalQuantity: 1,
@@ -228,24 +238,27 @@ export class CartService {
       });
 
       if (cart) {
-        const productIndex = cart.products.findIndex(
-          (product) => product.product.toString() === productId,
-        );
+        if (cart.totalProducts === 1) {
+          await this.cartRepository.findOneAndDelete({ user: user._id });
+        } else {
+          const productIndex = cart.products.findIndex(
+            (product) => product.product.toString() === productId,
+          );
 
-        if (productIndex > -1) {
-          const existingProduct = cart.products[productIndex];
-          cart.totalCartPrice -= Number(existingProduct.totalPrice);
-          cart.totalQuantity -= existingProduct.quantity;
-          cart.totalProducts -= 1;
-          cart.products.splice(productIndex, 1);
-          await cart.save();
+          if (productIndex > -1) {
+            const existingProduct = cart.products[productIndex];
+            cart.totalCartPrice -= Number(existingProduct.totalPrice);
+            cart.totalQuantity -= existingProduct.quantity;
+            cart.totalProducts -= 1;
+            cart.products.splice(productIndex, 1);
+            await cart.save();
+          }
         }
       }
 
       return {
         statusCode: HttpStatus.OK,
-        message: MESSAGE.PRODUCT_ADD_TO_CART,
-        data: cart,
+        message: MESSAGE.PRODUCT_REMOVED_FROM_CART,
       };
     } catch (error) {
       await this.errorHandlerService.HttpException(error);
@@ -270,6 +283,65 @@ export class CartService {
       return this.paymentsService
         .send('create_checkout_session', cart._id)
         .pipe(map((payment) => payment));
+    } catch (error) {
+      await this.errorHandlerService.HttpException(error);
+    }
+  }
+
+  /**
+   * Update the quantity of a product in the cart.
+   * @param productId The product to update the quantity for.
+   * @param quantity The new quantity for the product.
+   * @param user The user to update the quantity for.
+   * @returns The updated cart.
+   */
+  async updateQuantity(
+    productId: string,
+    quantity: number,
+    user: UserDocument,
+  ): Promise<BaseResponse> {
+    try {
+      const product = await this.productDocument.findOne({
+        _id: productId,
+      });
+      if (!product) {
+        throw new NotFoundException(MESSAGE.PRODUCT_NOT_FOUND);
+      }
+
+      const cart = await this.cartDocument.findOne({
+        user: user._id,
+      });
+
+      if (cart) {
+        const productIndex = cart.products.findIndex(
+          (product) => product.product.toString() === productId,
+        );
+
+        if (productIndex > -1) {
+          const existingProduct = cart.products[productIndex];
+          cart.totalCartPrice -= Number(existingProduct.totalPrice);
+          cart.totalQuantity -= existingProduct.quantity;
+          cart.products[productIndex].quantity = quantity;
+          cart.products[productIndex].totalPrice = parseFloat(
+            (quantity * product.price).toFixed(2),
+          );
+          cart.markModified('products');
+          cart.totalCartPrice = parseFloat(
+            (
+              parseFloat(cart.totalCartPrice.toString()) +
+              parseFloat(product.price.toFixed(2)) * quantity
+            ).toFixed(2),
+          );
+          cart.totalQuantity += quantity;
+          await cart.save();
+        }
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: MESSAGE.PRODUCT_ADD_TO_CART,
+        data: cart,
+      };
     } catch (error) {
       await this.errorHandlerService.HttpException(error);
     }

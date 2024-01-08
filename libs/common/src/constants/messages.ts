@@ -23,13 +23,14 @@ export const MESSAGE = {
   PRODUCT_UPDATED: 'Product updated successfully.',
   PRODUCT_DELETED: 'Product deleted successfully.',
   PRODUCT_NOT_FOUND: 'Product not found.',
-  PRODUCT_ADD_TO_CART: 'Product added to cart successfully.',
   PRODUCT_ALREADY_EXIST: 'Product with the same name or slug already exists.',
 
   // Cart
   CART_RETRIEVED: 'Cart retrieved successfully.',
   CART_CLEARED: 'Cart cleared successfully.',
   CART_NOT_FOUND: 'Cart not found.',
+  PRODUCT_ADD_TO_CART: 'Product added to cart successfully.',
+  PRODUCT_REMOVED_FROM_CART: 'Product removed from cart successfully.',
 
   // Order
   ORDER_NOT_FOUND: 'Order not found.',

@@ -6,6 +6,14 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 class Address {
   /**
+   * The _id of the address.
+   */
+  @ApiProperty({ example: '123456789' })
+  @IsString()
+  @IsOptional()
+  _id: string;
+  
+  /**
    * The street of the address.
    */
   @ApiProperty({ example: '123 Main St' })

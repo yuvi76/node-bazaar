@@ -87,4 +87,25 @@ export class CartController {
   async checkout(@CurrentUser() user: UserDocument): Promise<any> {
     return await this.cartService.checkout(user);
   }
+
+  /**
+   * Update the quantity of a product in the cart.
+   * @param productId The product to update the quantity for.
+   * @param quantity The new quantity for the product.
+   * @param user The user to update the quantity for.
+   * @returns The updated cart.
+   */
+  @UseGuards(JwtAuthGuard)
+  @Roles(ROLE.ADMIN, ROLE.USER)
+  @Post('/updateQuantity')
+  @ApiBody({
+    schema: { example: { productId: '60a1d8d9b3f7a6e5b4b7b8f0', quantity: 5 } },
+  })
+  async updateQuantity(
+    @Body('productId') productId: string,
+    @Body('quantity') quantity: number,
+    @CurrentUser() user: UserDocument,
+  ): Promise<BaseResponse> {
+    return await this.cartService.updateQuantity(productId, quantity, user);
+  }
 }

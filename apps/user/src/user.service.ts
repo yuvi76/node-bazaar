@@ -38,6 +38,10 @@ export class UserService {
       const currentUser = await this.userRepository.findOne({
         _id: user._id,
       });
+      currentUser.address.sort((a, b) => {
+        return Number(b.isDefault) - Number(a.isDefault);
+      });
+      delete currentUser.password;
       return {
         statusCode: HttpStatus.OK,
         message: MESSAGE.USER_RETRIEVED_SUCCESS,
@@ -59,6 +63,20 @@ export class UserService {
     updateUserAddressDto: UpdateUserAddressDto,
   ): Promise<BaseResponse> {
     try {
+      const currentUser = await this.userModel.findOne({
+        _id: user._id,
+      });
+
+      if (updateUserAddressDto.address.isDefault) {
+        currentUser.address.forEach((address) => {
+          address.isDefault = false;
+        });
+        currentUser.markModified('address');
+        await currentUser.save();
+      }
+
+      updateUserAddressDto.address._id = new mongoose.Types.ObjectId().toString();
+
       const updatedUser = await this.userRepository.findOneAndUpdate(
         { _id: user._id },
         { $push: updateUserAddressDto },
@@ -87,6 +105,52 @@ export class UserService {
       const updatedUser = await this.userRepository.findOneAndUpdate(
         { _id: user._id },
         updateUserDto,
+      );
+      return {
+        statusCode: HttpStatus.OK,
+        message: MESSAGE.USER_UPDATED_SUCCESS,
+        data: updatedUser,
+      };
+    } catch (error) {
+      await this.errorHandlerService.HttpException(error);
+    }
+  }
+
+  /**
+   * Update One Address
+   * @param user - The current user.
+   * @param updateUserAddressDto - The data for updating the current user.
+   * @returns A promise that resolves to a BaseResponse object.
+   */
+  async updateOneAddress(
+    user: UserDocument,
+    updateUserAddressDto: UpdateUserAddressDto,
+  ): Promise<BaseResponse> {
+    try {
+      const currentUser = await this.userModel.findOne({
+        _id: user._id,
+      });
+
+      if (updateUserAddressDto.address.isDefault) {
+        currentUser.address.forEach((address) => {
+          address.isDefault = false;
+        });
+        currentUser.markModified('address');
+        await currentUser.save();
+      }
+
+      const updatedUser = await this.userRepository.findOneAndUpdate(
+        { _id: user._id, 'address._id': updateUserAddressDto.address._id },
+        {
+          $set: {
+            'address.$.street': updateUserAddressDto.address.street,
+            'address.$.city': updateUserAddressDto.address.city,
+            'address.$.state': updateUserAddressDto.address.state,
+            'address.$.zip': updateUserAddressDto.address.zip,
+            'address.$.country': updateUserAddressDto.address.country,
+            'address.$.isDefault': updateUserAddressDto.address.isDefault,
+          },
+        },
       );
       return {
         statusCode: HttpStatus.OK,
