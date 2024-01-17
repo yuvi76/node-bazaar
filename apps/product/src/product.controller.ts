@@ -65,10 +65,10 @@ export class ProductController {
    * Get Recommended Products
    * @returns Recommended Products
    */
-  @Get('/recommended')
-  async getRecommendedProducts(): Promise<BaseResponse> {
-    return await this.productService.getRecommendedProducts();
-  }
+  // @Get('/recommended')
+  // async getRecommendedProducts(): Promise<BaseResponse> {
+  //   return await this.productService.getRecommendedProducts();
+  // }
 
   /**
    * Get one product.

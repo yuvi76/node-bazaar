@@ -103,7 +103,7 @@ export class CartService {
           user: user._id.toString(),
           products: [
             {
-              product: new mongoose.Types.ObjectId(createCartDto.product),
+              product: createCartDto.product,
               quantity: createCartDto.quantity,
               price: parseFloat(product.price.toFixed(2)),
               totalPrice:
@@ -141,6 +141,13 @@ export class CartService {
         },
         {
           $unwind: { path: '$products', preserveNullAndEmptyArrays: true },
+        },
+        {
+          $addFields: {
+            'products.product': {
+              $toObjectId: '$products.product',
+            },
+          },
         },
         {
           $lookup: {

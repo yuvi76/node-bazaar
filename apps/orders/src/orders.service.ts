@@ -119,6 +119,13 @@ export class OrdersService {
           $unwind: { path: '$products', preserveNullAndEmptyArrays: true },
         },
         {
+          $addFields: {
+            'products.product': {
+              $toObjectId: '$products.product',
+            },
+          },
+        },
+        {
           $lookup: {
             from: 'products',
             localField: 'products.product',
@@ -158,6 +165,11 @@ export class OrdersService {
             createdAt: 1,
           },
         },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        }
       ]);
       if (!orders) {
         throw new NotFoundException(MESSAGE.ORDER_NOT_FOUND);
@@ -188,6 +200,13 @@ export class OrdersService {
         },
         {
           $unwind: { path: '$products', preserveNullAndEmptyArrays: true },
+        },
+        {
+          $addFields: {
+            'products.product': {
+              $toObjectId: '$products.product',
+            },
+          },
         },
         {
           $lookup: {
@@ -259,6 +278,13 @@ export class OrdersService {
           $unwind: { path: '$products', preserveNullAndEmptyArrays: true },
         },
         {
+          $addFields: {
+            'products.product': {
+              $toObjectId: '$products.product',
+            },
+          },
+        },
+        {
           $lookup: {
             from: 'products',
             localField: 'products.product',
@@ -297,6 +323,11 @@ export class OrdersService {
             createdAt: 1,
           },
         },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        }
       ]);
       if (!orders) {
         throw new NotFoundException(MESSAGE.ORDER_NOT_FOUND);

@@ -10,7 +10,7 @@ class Product {
    * The product ID associated with the cart.
    */
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'products' })
-  product: mongoose.ObjectId;
+  product: string;
 
   /**
    * The quantity of the product in the cart.

@@ -41,6 +41,13 @@ export class PaymentsService {
         $unwind: { path: '$products', preserveNullAndEmptyArrays: true },
       },
       {
+        $addFields: {
+          'products.product': {
+            $toObjectId: '$products.product',
+          },
+        },
+      },
+      {
         $lookup: {
           from: 'products',
           localField: 'products.product',
