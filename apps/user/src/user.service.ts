@@ -75,7 +75,8 @@ export class UserService {
         await currentUser.save();
       }
 
-      updateUserAddressDto.address._id = new mongoose.Types.ObjectId().toString();
+      updateUserAddressDto.address._id =
+        new mongoose.Types.ObjectId().toString();
 
       const updatedUser = await this.userRepository.findOneAndUpdate(
         { _id: user._id },

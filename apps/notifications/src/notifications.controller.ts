@@ -10,12 +10,13 @@ import {
   Roles,
   UserDocument,
 } from '@app/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 /**
  * Controller responsible for handling notifications.
  */
-@Controller()
+@Controller('notifications')
+@ApiTags('Notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 

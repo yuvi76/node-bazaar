@@ -11,6 +11,8 @@ import {
   CartDocument,
   CartSchema,
   NOTIFICATIONS_SERVICE,
+  ProductDocument,
+  ProductSchema,
 } from '@app/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
@@ -27,6 +29,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     DatabaseModule.forFeature([
       { name: OrdersDocument.name, schema: OrdersSchema },
       { name: CartDocument.name, schema: CartSchema },
+      { name: ProductDocument.name, schema: ProductSchema },
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -74,7 +77,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           },
         }),
         inject: [ConfigService],
-      }
+      },
     ]),
   ],
   controllers: [OrdersController],

@@ -24,6 +24,7 @@ export const MESSAGE = {
   PRODUCT_DELETED: 'Product deleted successfully.',
   PRODUCT_NOT_FOUND: 'Product not found.',
   PRODUCT_ALREADY_EXIST: 'Product with the same name or slug already exists.',
+  PRODUCT_NOT_IN_STOCK: 'Product is not in stock.',
 
   // Cart
   CART_RETRIEVED: 'Cart retrieved successfully.',
@@ -36,6 +37,7 @@ export const MESSAGE = {
   ORDER_NOT_FOUND: 'Order not found.',
   ORDERS_FETCHED_SUCCESS: 'Orders fetched successfully.',
   ORDER_UPDATED_SUCCESS: 'Order updated successfully.',
+  Add_ADDRESS_TO_ORDER: 'Please add address to place order.',
 
   // Review
   REVIEW_CREATED: 'Review created successfully.',

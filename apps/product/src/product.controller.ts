@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ProductService } from './product.service';
@@ -51,6 +59,15 @@ export class ProductController {
   @CacheKey('getFeaturedProducts')
   async getFeaturedProducts(): Promise<BaseResponse> {
     return await this.productService.getFeaturedProducts();
+  }
+
+  /**
+   * Get Recommended Products
+   * @returns Recommended Products
+   */
+  @Get('/recommended')
+  async getRecommendedProducts(): Promise<BaseResponse> {
+    return await this.productService.getRecommendedProducts();
   }
 
   /**

@@ -1,11 +1,13 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { BaseResponse, ProductDocument, ReviewsDocument } from '@app/common';
+import axios from 'axios';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { MESSAGE, ErrorHandlerService } from '@app/common';
 import { ProductRepository } from './product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductListDto } from './dto/get-product-list.dto';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * Service class for managing product data.
@@ -24,6 +26,7 @@ export class ProductService {
     @InjectModel(ReviewsDocument.name)
     private readonly reviewsModel: Model<ReviewsDocument>,
     private readonly errorHandlerService: ErrorHandlerService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -368,6 +371,87 @@ export class ProductService {
         ],
       );
       return true;
+    } catch (error) {
+      // Handle the error here
+      await this.errorHandlerService.HttpException(error);
+    }
+  }
+
+  async getEmbedding(query) {
+    const hfToken = this.configService.get('HF_TOKEN');
+    const embeddingUrl =
+      'https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2';
+
+    const response = await axios.post(
+      embeddingUrl,
+      { inputs: query },
+      { headers: { Authorization: `Bearer ${hfToken}` } },
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Request failed with status code ${response.status}: ${response.data}`,
+      );
+    }
+
+    return response.data;
+  }
+
+  async findSimilarDocuments(embedding) {
+    try {
+      const documents = await this.productModel.aggregate([
+        {
+          $vectorSearch: {
+            index: 'vector_index',
+            path: 'product_embedding',
+            queryVector: embedding,
+            numCandidates: 5,
+            limit: 5,
+          },
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category',
+          },
+        },
+        {
+          $unwind: '$category',
+        },
+        {
+          $project: {
+            product_embedding: 0,
+          },
+        },
+      ]);
+      return documents;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  /**
+   * Get Recommended Products
+   * @returns Recommended Products
+   */
+  async getRecommendedProducts(): Promise<BaseResponse> {
+    try {
+      const query = ''; // Replace with your query.
+
+      try {
+        const embedding = await this.getEmbedding(query);
+        const documents = await this.findSimilarDocuments(embedding);
+
+        console.log(documents);
+        return {
+          statusCode: HttpStatus.OK,
+          message: MESSAGE.PRODUCTS_RETRIEVED,
+          data: documents,
+        };
+      } catch (err) {
+        console.error(err);
+      }
     } catch (error) {
       // Handle the error here
       await this.errorHandlerService.HttpException(error);

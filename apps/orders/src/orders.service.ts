@@ -3,6 +3,7 @@ import {
   HttpStatus,
   NotFoundException,
   Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   BaseResponse,
@@ -14,6 +15,7 @@ import {
   UserDocument,
   ORDER_STATUS,
   NOTIFICATIONS_SERVICE,
+  ProductDocument,
 } from '@app/common';
 import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -40,6 +42,8 @@ export class OrdersService {
     readonly ordersDocument: mongoose.Model<OrdersDocument>,
     @InjectModel(CartDocument.name)
     readonly cartDocument: mongoose.Model<CartDocument>,
+    @InjectModel(ProductDocument.name)
+    readonly productDocument: mongoose.Model<ProductDocument>,
     @Inject(PAYMENTS_SERVICE) private readonly paymentsService: ClientProxy,
     @Inject(NOTIFICATIONS_SERVICE)
     private readonly notificationsService: ClientProxy,
@@ -52,9 +56,18 @@ export class OrdersService {
    */
   async placeOrder(user: UserDocument): Promise<any> {
     try {
+      if (!user.address.length) {
+        throw new BadRequestException(MESSAGE.Add_ADDRESS_TO_ORDER);
+      }
       const cart = await this.cartDocument.findOne({ user: user._id });
       if (!cart) {
         throw new NotFoundException(MESSAGE.CART_NOT_FOUND);
+      }
+      const product = await this.productDocument.findOne({
+        _id: cart.products[0].product,
+      });
+      if (product.countInStock < cart.products[0].quantity) {
+        throw new BadRequestException(MESSAGE.PRODUCT_NOT_IN_STOCK);
       }
       return this.paymentsService
         .send('create_checkout_session', cart._id)
@@ -70,6 +83,10 @@ export class OrdersService {
               type: 'Order Placed',
               message: `Your order has been placed successfully.`,
             });
+            await this.productDocument.findOneAndUpdate(
+              { _id: cart.products[0].product },
+              { $inc: { countInStock: -cart.products[0].quantity } },
+            );
             return this.ordersRepository.create({
               user: user._id.toString(),
               products: cart.products,
@@ -134,6 +151,7 @@ export class OrdersService {
             'products.product.slug': 1,
             'products.product.price': 1,
             'products.product.description': 1,
+            'products.product.image': 1,
             'products.price': 1,
             'products.quantity': 1,
             totalPrice: 1,
@@ -322,6 +340,12 @@ export class OrdersService {
       ]);
       if (!order) {
         throw new NotFoundException(MESSAGE.ORDER_NOT_FOUND);
+      }
+      if (orderStatus === ORDER_STATUS.CANCELLED) {
+        await this.productDocument.findOneAndUpdate(
+          { _id: order.products[0].product },
+          { $inc: { countInStock: order.products[0].quantity } },
+        );
       }
       await this.ordersDocument.findOneAndUpdate(
         { _id: new mongoose.Types.ObjectId(orderId) },

@@ -74,10 +74,6 @@ export class UserController {
     @CurrentUser() user: UserDocument,
     @Body() updateUserAddressDto: UpdateUserAddressDto,
   ): Promise<BaseResponse> {
-    return await this.userService.updateOneAddress(
-      user,
-      updateUserAddressDto,
-    );
+    return await this.userService.updateOneAddress(user, updateUserAddressDto);
   }
 }
-  
