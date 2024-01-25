@@ -1,8 +1,8 @@
-# Node-bazaar Microservice
+# 🚀 Node-bazaar Microservice 🛒 
 
 This project is an implementation of an Node-bazaar platform using a microservice architecture.
 
-## Services
+## 💁🏻‍♂️ Services
 
 The project is divided into several microservices, each responsible for a single business capability:
 
@@ -14,7 +14,7 @@ The project is divided into several microservices, each responsible for a single
 6. **Review Rating Service**: Manages customer reviews and ratings for products. This service allows users to post reviews and rate products, and also aggregates these reviews and ratings to provide overall scores for products.
 7. **Notification Service**: Handles all notifications sent to users. This could include order status updates, payment confirmations, promotional messages, and more. This service typically integrates with email, or in app notification services to deliver notifications.
 
-## Running the Services
+## ⚙️ Running the Services
 
 Each service is a separate application and needs to be run individually. Here are the general steps to run each service:
 
@@ -32,7 +32,7 @@ Each service is a separate application and needs to be run individually. Here ar
 
 To stop the services, use the `docker-compose down` command. To rebuild and restart the services after making changes, use the `docker-compose up --build` command.
 
-## API Documentation
+## 📚 API Documentation
 
 Each service in this project has a Swagger UI for API documentation and testing. Once the services are running, you can access the Swagger UI for each service by navigating to `/api` on the service's URL.
 
@@ -40,7 +40,7 @@ For example, if the Auth Service is running on `http://localhost:3000`, you can 
 
 The Swagger UI allows you to view the API endpoints for each service, their request parameters, and response formats. You can also send requests to the API endpoints directly from the Swagger UI.
 
-## Tools & Technology Used
+## 🛠️ Tools & Technology Used
 
 This project uses a variety of technologies to create a microservice architecture:
 
