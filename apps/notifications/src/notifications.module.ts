@@ -8,6 +8,7 @@ import {
   NotificationsDocument,
   NotificationsSchema,
   AUTH_SERVICE,
+  HealthModule,
 } from '@app/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NotificationsController } from './notifications.controller';
@@ -51,6 +52,7 @@ import { NotificationsService } from './notifications.service';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [NotificationsController],
   providers: [NotificationsService, ErrorHandlerService, EmailService],

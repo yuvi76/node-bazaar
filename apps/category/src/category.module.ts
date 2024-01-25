@@ -7,6 +7,7 @@ import {
   ErrorHandlerService,
   CategoryDocument,
   CategorySchema,
+  HealthModule,
 } from '@app/common';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
@@ -51,6 +52,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       ttl: 30000,
       max: 100,
     }),
+    HealthModule,
   ],
   controllers: [CategoryController],
   providers: [CategoryService, CategoryRepository, ErrorHandlerService],

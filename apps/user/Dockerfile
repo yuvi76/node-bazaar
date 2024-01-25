@@ -7,11 +7,12 @@ COPY package*.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
+COPY apps/user apps/user
+COPY libs libs
+
 RUN npm install
 
-COPY . .
-
-RUN npm run build product
+RUN npm run build user
 
 # Production stage
 FROM node:alpine As production

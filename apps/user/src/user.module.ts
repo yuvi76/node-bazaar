@@ -8,6 +8,7 @@ import {
   ErrorHandlerService,
   UserDocument,
   UserSchema,
+  HealthModule,
 } from '@app/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -44,6 +45,7 @@ import { UserRepository } from './user.repository';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, ErrorHandlerService],

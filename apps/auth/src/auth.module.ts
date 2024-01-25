@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import {
   DatabaseModule,
   ErrorHandlerService,
+  HealthModule,
   UserDocument,
   UserSchema,
 } from '@app/common';
@@ -43,6 +44,7 @@ import { UsersRepository } from './users.repository';
       }),
       inject: [ConfigService],
     }),
+    HealthModule,
   ],
   controllers: [AuthController],
   providers: [

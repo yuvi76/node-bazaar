@@ -9,6 +9,7 @@ import {
   PRODUCT_SERVICE,
   ReviewsDocument,
   ReviewsSchema,
+  HealthModule,
 } from '@app/common';
 import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
@@ -59,6 +60,7 @@ import { ReviewsRepository } from './reviews.repository';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [ReviewsController],
   providers: [ReviewsService, ReviewsRepository, ErrorHandlerService],

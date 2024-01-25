@@ -26,3 +26,7 @@ export * from './service';
  * This file exports the contents of the 'models' module.
  */
 export * from './models';
+/**
+ * This file exports the contents of the 'health' module.
+ */
+export * from './health';

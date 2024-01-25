@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - image: public.ecr.aws/j1x5a0m4/auth:latest
+          name: auth
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: connectionString
+            - name: JWT_SECRET
+              value: 'random-secret-key'
+            - name: JWT_EXPIRATION_TIME
+              value: '28800'
+            - name: TCP_PORT
+              value: '3001'
+            - name: HTTP_PORT
+              value: '3000'
+              ports:
+                - containerPort: 3000
+                - containerPort: 3001

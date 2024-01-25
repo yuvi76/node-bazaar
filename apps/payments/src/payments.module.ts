@@ -8,6 +8,7 @@ import {
   ErrorHandlerService,
   CartDocument,
   CartSchema,
+  HealthModule,
 } from '@app/common';
 
 /**
@@ -27,6 +28,7 @@ import {
         STRIPE_SECRET_KEY: Joi.string().required(),
       }),
     }),
+    HealthModule,
   ],
   controllers: [PaymentsController, ErrorHandlerService],
   providers: [PaymentsService],

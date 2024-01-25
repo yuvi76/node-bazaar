@@ -7,9 +7,10 @@ COPY package*.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-RUN npm install
+COPY apps/product apps/product
+COPY libs libs
 
-COPY . .
+RUN npm install
 
 RUN npm run build product
 

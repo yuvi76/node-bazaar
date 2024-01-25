@@ -11,6 +11,7 @@ import {
   ProductDocument,
   ProductSchema,
   PAYMENTS_SERVICE,
+  HealthModule,
 } from '@app/common';
 import { CartController } from './cart.controller';
 import { CartService } from './cart.service';
@@ -62,6 +63,7 @@ import { CartRepository } from './cart.repository';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [CartController],
   providers: [CartService, CartRepository, ErrorHandlerService],

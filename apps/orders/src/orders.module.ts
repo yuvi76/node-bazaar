@@ -13,6 +13,7 @@ import {
   NOTIFICATIONS_SERVICE,
   ProductDocument,
   ProductSchema,
+  HealthModule,
 } from '@app/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
@@ -79,6 +80,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository, ErrorHandlerService],
