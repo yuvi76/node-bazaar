@@ -1,5 +1,7 @@
 # 🚀 Node-bazaar Microservice 🛒 
 
+<img src="Logo.png" alt="Logo" width="200" height="200"/>
+
 This project is an implementation of an Node-bazaar platform using a microservice architecture.
 
 ## 💁🏻‍♂️ Services
